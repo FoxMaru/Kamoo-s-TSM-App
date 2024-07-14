@@ -1,0 +1,28 @@
+name: Update TSM Auction Data
+
+on:
+  schedule:
+    - cron: '0 */2 * * *' # 每2小时更新一次
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+
+    - name: Install dependencies
+      run: pip install -r requirements.txt
+
+    - name: Update auction data
+      run: python -m ah.updater us
+      env:
+        BN_CLIENT_ID: ${{ secrets.BN_CLIENT_ID }}
+        BN_CLIENT_SECRET: ${{ secrets.BN_CLIENT_SECRET }}
